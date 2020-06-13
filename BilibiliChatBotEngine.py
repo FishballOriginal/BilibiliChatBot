@@ -6,7 +6,7 @@ import json
 
 from bs4 import BeautifulSoup
 
-import ChatEngineFunctions.SessionGet, ChatEngineFunctions.ChatHistoryGet
+import ChatEngineFunctions.SessionGet, ChatEngineFunctions.ChatHistoryGet, ChatEngineFunctions.HeaderTransfer
 
 '''
 =====MAIN FUNCTION OF BILIBILI CHAT BOT=====
