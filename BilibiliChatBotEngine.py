@@ -53,6 +53,7 @@ def Loop():
     for chatBehaviour in chatBehaviours:
         chatBehaviour.Update()
     
+    # get all the sessions
 
     # run the LateUpdate() of each ChatBehaviour
     for chatBehaviour in chatBehaviours:

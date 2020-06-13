@@ -1,4 +1,5 @@
 from ChatBehaviour import ChatBehaviour
+import time
 
 class TestBehaviour(ChatBehaviour):
 
@@ -8,6 +9,7 @@ class TestBehaviour(ChatBehaviour):
     
     # called every time when the main loop execute, before every other functions
     def Update(self):
+        print (time.asctime())
         pass
 
 chatBehaviour = TestBehaviour()
