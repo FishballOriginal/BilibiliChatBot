@@ -27,8 +27,15 @@ class ChatBehaviour:
 
     # attributes of ChatBehaviour
     def __init__(self):
+        # work Directory
+        self.dataPath = ''
+
+        # the main header of the program
+        self.headers = {}
+
         # all the chat sessions the main program is currently processing
         self.chatSessions = []
+        self.newChatSessions = []
     
     # called once when the module is loaded at the start of the whole program
     def Activate(self):

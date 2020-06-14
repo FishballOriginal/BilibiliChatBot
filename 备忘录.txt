@@ -1,0 +1,34 @@
+大号抓包记录
+
+    我的消息主页面
+
+        主动发送消息抓包：
+        https://api.vc.bilibili.com/session_svr/v1/session_svr/get_sessions?session_type=1&group_fold=1&unfollow_fold=1&sort_rule=2&build=0&mobi_app=web
+
+        应援团最新消息最后一条：
+        https://api.vc.bilibili.com/session_svr/v1/session_svr/get_sessions?session_type=3&size=1&group_fold=1&unfollow_fold=1&sort_rule=1&build=0&mobi_app=web
+
+        未关注人最新消息最后一条：
+        https://api.vc.bilibili.com/session_svr/v1/session_svr/get_sessions?session_type=2&size=1&group_fold=1&unfollow_fold=1&sort_rule=1&build=0&mobi_app=web
+
+    未关注人消息界面
+
+        前19条：
+        https://api.vc.bilibili.com/session_svr/v1/session_svr/get_sessions?session_type=2&group_fold=1&unfollow_fold=1&sort_rule=2&build=0&mobi_app=web
+
+        二次请求：
+        https://api.vc.bilibili.com/session_svr/v1/session_svr/get_sessions?session_type=2&group_fold=1&unfollow_fold=1&sort_rule=2&end_ts=1588249889121384&build=0&mobi_app=web
+    
+    分析总结：
+
+        可以肯定，session获取api在https://api.vc.bilibili.com/session_svr/v1/session_svr/get_sessions下
+        未关注人传入session_type=2
+        sort_rule=1是折叠返回，即只返回最后一条
+        sort_rule=2是完全返回，即返回一定数量，有时候是最新18条，有时候是最新19条
+
+        如果想要获得更多记录需要传入end_ts，即本次获取到的所有session的最后一条的Unix时间戳
+        这里
+        end_ts=1588249889121384
+        转换成北京时间是4月30号左右，正好是我们获取到的第一批未关注人信息的最后一条
+
+        但是，考虑到更新周期为5秒一次，19条最新session基本上够用了，不是百万级的Up主不用高强度获取session
