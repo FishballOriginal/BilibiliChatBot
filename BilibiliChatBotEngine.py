@@ -133,6 +133,9 @@ def ChatBehaviourInitialize():
     
     for chatBehaviour in chatBehaviours:
         chatBehaviour.dataPath = dataPathRoot
+    
+    for chatBehaviour in chatBehaviours:
+        chatBehaviour.UID = selfUid
 
 
 

@@ -8,10 +8,13 @@ import ChatEngineFunctions.HeaderTransfer as HeaderTransfer
 '''
 CLASS: ChatSession -- A class that handle the chat session with on specific user
 
-ATTRIBUTE: headers. talker_id
+ATTRIBUTE: session, headers. talker_id, latest_seqno, selfUID
 
+session -- the session info of the current ChatSession
 headers -- headers of API 'https://api.vc.bilibili.com/svr_sync/v1/svr_sync/fetch_session_msgs'
 talker_id -- the UID of the talker you currently want to get
+latest_seqno -- the latest chat seqno info, used to determine the statrt of GetChatHistory()
+selfUID -- your own UID
 
 METHOD: GetChatHistory
 
@@ -22,14 +25,17 @@ HISTORY:
 '''
 class ChatSession:
 
-    def __init__(self, headersIn, talker_idIn, selfUIDIn):
-        self.headers = {}
-        self.talker_id = ''
-        self.selfUID = ''
+    def __init__(self, headersIn, sessionIn, selfUIDIn):
 
+        # API Info
+        self.session = sessionIn
         self.headers = headersIn
-        self.talker_id = talker_idIn
+        self.talker_id = sessionIn['talker_id']
+        self.latest_seqno = sessionIn['last_msg']['msg_seqno']
         self.selfUID = selfUIDIn
+
+        # session record
+        self.sessionRecordData = {}
 
     '''
     METHOD: GetChatHistory -- Method that get the chat history with specific user within specific span
@@ -92,3 +98,6 @@ class ChatSession:
         messageSendResponse = requests.post(url, formData, headers=self.headers)
 
         return messageSendResponse
+    
+    def LoadSessionRecord(self, jsonText):
+        self.sessionRecordData = json.loads(str(jsonText))

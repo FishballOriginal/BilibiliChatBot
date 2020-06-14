@@ -14,7 +14,7 @@ OUTPUT: [sessionList, talkerUIDList]
 sessionList -- the json object of the whole session including talker_id, unread_count, last_msg
     talker_id -- the UID of the talker of this session
     unread_count -- the number of unreaded messages in this session
-    last_message -- the data of the last message, including content, msg_seqno, timestamp
+    last_msg -- the data of the last message, including content, msg_seqno, timestamp
         content -- the main content text of the last message
         msg_seqno --  the last message's seqno index, compare this index with the latest seqno index you stored in your storage, you can tell how many new messages the sender sent
         timestamp -- the time stamp(UNIX TIMESTAMP) of the last message when it was sent

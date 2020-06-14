@@ -32,6 +32,8 @@ class ChatBehaviour:
 
         # the main header of the program
         self.headers = {}
+        # your own UID
+        self.UID = ''
 
         # all the chat sessions the main program is currently processing
         self.chatSessions = []
