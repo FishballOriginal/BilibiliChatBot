@@ -6,7 +6,9 @@ import json
 
 from bs4 import BeautifulSoup
 
-import ChatEngineFunctions.SessionGet, ChatEngineFunctions.ChatHistoryGet, ChatEngineFunctions.HeaderTransfer
+import ChatEngineFunctions.SessionGet as SessionGet
+import ChatEngineFunctions.ChatHistoryGet as ChatHistoryGet
+import ChatEngineFunctions.HeaderTransfer as HeaderTransfer
 
 '''
 =====MAIN FUNCTION OF BILIBILI CHAT BOT=====
@@ -20,6 +22,13 @@ import ChatEngineFunctions.SessionGet, ChatEngineFunctions.ChatHistoryGet, ChatE
 # delta time betweem two main loop
 deltaTime = 1
 
+# root folder path of all the headers
+headersPathRoot = os.getcwd() + '\\Headers\\'
+# headers to get sessions
+sessionHeaders = {}
+# headers to get chat history
+chatHistoryHeaders = {}
+
 # root folder path of all the modules
 modulePathRoot = os.getcwd() + '\\Modules\\'
 # all the modules(ChatBehaviour objects)
@@ -27,6 +36,21 @@ chatBehaviours = []
 
 
 # ==================== PRIVATE FUNCTIONS ====================
+
+# load all the headers in the Headers folder
+# session headers are saved in SessionHeader.txt
+# chat history headers are saved in the ChatHistoryHeader.txt
+def LoadHeaders():
+    global sessionHeaders
+    global chatHistoryHeaders
+
+    headersFileLits = os.listdir(headersPathRoot)
+    if 'SessionHeader.txt' in headersFileLits:
+        with open(headersPathRoot + 'SessionHeader.txt', 'r') as sessionHeaderFile:
+            sessionHeaders = HeaderTransfer.TransferHeader(sessionHeaderFile.read())
+    if 'ChatHistoryHeader.txt' in headersFileLits:
+        with open(headersPathRoot + 'ChatHistoryHeader.txt', 'r') as chatHistoryHeaderFile:
+            chatHistoryHeaders = HeaderTransfer.TransferHeader(chatHistoryHeaderFile.read())
 
 # load all the modules in the Modules folder
 def LoadModules():
@@ -49,11 +73,14 @@ def LoadModules():
 # ==================== MAIN FUNCTION ====================
 
 def Loop():
+    global sessionHeaders
+
     # run the Update() of each ChatBehaviour
     for chatBehaviour in chatBehaviours:
         chatBehaviour.Update()
     
     # get all the sessions
+    SessionGet.GetSession(sessionHeaders)
 
     # run the LateUpdate() of each ChatBehaviour
     for chatBehaviour in chatBehaviours:
@@ -63,6 +90,10 @@ def Loop():
 def Main():
     global deltaTime
 
+    # load all the headers
+    LoadHeaders()
+
+    # load all the modules using reflect
     LoadModules()
 
     # run Activate() for all ChatBehaviours
