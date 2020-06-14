@@ -24,11 +24,13 @@ BCB中的生命周期参考了Unity引擎的生命周期系统，两者开发逻
 
 BCB中的生命周期目前逻辑如下（14/6/2020）：
 
+![image](https://github.com/BerkeleyZhou/BilibiliChatBot/blob/master/ReadmeResource/Annotation%202020-06-14%20202959.jpg)
+
 ## 演示
 
 现在画面中左边的代码即逻辑代码TestBehaviour，如同在Unity游戏引擎中脚本需要继承MonoBehaviour类一样，BCB中的逻辑代码需要继承ChatBehaviour类
 
-
+![image](https://github.com/BerkeleyZhou/BilibiliChatBot/blob/master/ReadmeResource/TestBehaviour_show.gif)
 
 编写好的ChatBehaviour逻辑代码需要放入Modules等待主程序反射
 
@@ -36,6 +38,6 @@ BCB中的生命周期目前逻辑如下（14/6/2020）：
 
 如果有新用户发送消息，会获得新用户的Session信息，包括UID，seqno信息等等
 
-
+![image](https://github.com/BerkeleyZhou/BilibiliChatBot/blob/master/ReadmeResource/ChatEngine_TestBehaviour_show.gif)
 
 在这个案例中，我们进行了简单的逻辑判断，如果用户发送的信息是“测试语句1”，我们就回复“收到消息“测试语句1”，自动回复”
