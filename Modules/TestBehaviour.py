@@ -3,9 +3,10 @@ import json
 import threading
 import os
 
+from ChatBehaviour import ChatBehaviour
 import ChatEngineFunctions.ChatSession as ChatSession
 import ChatEngineFunctions.ChatEngine as ChatEngine
-from ChatBehaviour import ChatBehaviour
+from ChatEngineFunctions.SessionDataIO import SessionDataIO
 
 class TestBehaviour(ChatBehaviour):
 
@@ -56,13 +57,13 @@ class TestBehaviour(ChatBehaviour):
             # initialize session
             handleSession = ChatSession.ChatSession(self.headers, session, self.UID)
             # load session data
-            handleSession = self.SessionRecordLoad(handleSession)
+            handleSession = SessionDataIO().SessionRecordLoad(handleSession, self.sessionRecordPath, self.defaultSessionData)
 
             print('session ' + str(handleSession.talker_id) + '\'s session data:\n' + str(handleSession.sessionRecordData))
             
-            # print(session)
             # a list of chat history
             newChatHistory = []
+            # get session chat history from 'handleSession.sessionRecordData['latestSeqno']'
             for history in handleSession.GetChatHistory(handleSession.sessionRecordData['latestSeqno']):
                 newChatHistory.append(json.loads(history['content'])['content'])
             print(newChatHistory)
@@ -70,52 +71,14 @@ class TestBehaviour(ChatBehaviour):
             # check if target senetnce in the new message list
             if ('测试语句1' in newChatHistory):
                 handleSession.SendMessage("收到消息“测试语句1”，自动回复")
+                # add seqno because we replied 1 message
+                handleSession.latest_seqno += 1
             
+            # write latestSeqno data back to dictionary and save it into session data
             handleSession.sessionRecordData['latestSeqno'] = handleSession.latest_seqno
-            self.SessionRecordSave(handleSession)
+            SessionDataIO().SessionRecordSave(handleSession, self.sessionRecordPath, self.defaultSessionData)
     
     # ==================== SESSION DATA OPERATION ====================
-    
-    def SessionRecordLoad(self, chatSession):
-        # get the session data folder
-        if ('SessionData' in os.listdir(os.getcwd())):
-            talker_id = str(chatSession.talker_id)
-
-            # current session's data file exist, load the file
-            if (talker_id + '.txt' in os.listdir(self.sessionRecordPath)):
-                with open(self.sessionRecordPath + '\\' + talker_id + '.txt ', 'r') as sessionRecordFile:
-                    chatSession.LoadSessionRecord(sessionRecordFile.read())
-            
-            # current session's data file doesn't exist, create one, load current data file with default session record data
-            else:
-                with open(self.sessionRecordPath + '\\' + talker_id + '.txt ', 'w') as sessionRecordFile:
-                    pass
-                chatSession.sessionRecordData=self.defaultSessionData
-            
-            self.SessionRecordSave(chatSession)
-            
-            return chatSession
-        
-        # data folder doesn't exist, create one
-        else:
-            os.mkdir(self.sessionRecordPath)
-            return self.SessionRecordLoad(chatSession)
-    
-    def SessionRecordSave(self, chatSession):
-        # get the session data folder
-        if ('SessionData' in os.listdir(os.getcwd())):
-            talker_id = str(chatSession.talker_id)
-
-            # write session data to the file
-            with open(self.sessionRecordPath + '\\' + talker_id + '.txt ', 'w') as sessionRecordFile:
-                sessionRecordFile.write(json.dumps(chatSession.sessionRecordData))
-            
-            return chatSession
-        
-        # data folder doesn't exist, create one
-        else:
-            os.mkdir(self.sessionRecordPath)
-            self.SessionRecordLoad(chatSession)
 
 
 chatBehaviour = TestBehaviour()

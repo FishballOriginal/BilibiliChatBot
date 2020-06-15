@@ -8,17 +8,20 @@ import ChatEngineFunctions.HeaderTransfer as HeaderTransfer
 '''
 CLASS: ChatSession -- A class that handle the chat session with on specific user
 
-ATTRIBUTE: session, headers. talker_id, latest_seqno, selfUID
+ATTRIBUTE: session, headers. talker_id, latest_seqno, selfUID, sessionRecordData
 
 session -- the session info of the current ChatSession
 headers -- headers of API 'https://api.vc.bilibili.com/svr_sync/v1/svr_sync/fetch_session_msgs'
 talker_id -- the UID of the talker you currently want to get
 latest_seqno -- the latest chat seqno info, used to determine the statrt of GetChatHistory()
 selfUID -- your own UID
+sessionRecordData -- the extend data saved in the session(disctionary), you can customize data in the session
 
-METHOD: GetChatHistory
+METHOD: GetChatHistory, SendMessage, LoadSessionRecord
 
 GetChatHistory -- Get the chat history with current user within specific seqno
+SendMessage -- A function that send message to the current user
+LoadSessionRecord -- A function that load the json string into sessionRecordData
 
 HISTORY:
 14/6/2020 Fangjun Zhou : Create
@@ -77,6 +80,21 @@ class ChatSession:
         messages = chatHistoryJson['data']['messages']
 
         return messages
+
+    '''
+    METHOD : SendMessage -- A function that send message to the current user
+
+    INPUT : message
+
+    message -- text message to send(string)
+
+    OUTPUT : messageSendResponse
+
+    messageSendResponse -- http respons with post requests to send_msg API
+
+    HISTORY:
+    14/5/2020 Fangjun Zhou : Create
+    '''
     
     def SendMessage(self, message):
         url = 'https://api.vc.bilibili.com/web_im/v1/web_im/send_msg'
@@ -99,5 +117,18 @@ class ChatSession:
 
         return messageSendResponse
     
+    '''
+    METHOD : LoadSessionRecord -- A function that load the json string into sessionRecordData
+
+    INPUT : jsonText
+
+    jsonText -- json string that stores all the session data, usually store in a text file and load it when needed
+
+    OUTPUT : None
+
+    HISTORY:
+    14/5/2020 Fangjun Zhou : Create
+    '''
+
     def LoadSessionRecord(self, jsonText):
         self.sessionRecordData = json.loads(str(jsonText))
