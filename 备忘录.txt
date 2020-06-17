@@ -1,4 +1,4 @@
-大号抓包记录
+大号抓包记录 -- 消息接收
 
     我的消息主页面
 
@@ -32,3 +32,24 @@
         转换成北京时间是4月30号左右，正好是我们获取到的第一批未关注人信息的最后一条
 
         但是，考虑到更新周期为5秒一次，19条最新session基本上够用了，不是百万级的Up主不用高强度获取session
+
+
+大号抓包记录 -- 用户关系
+    经过几轮测试
+    https://api.bilibili.com/x/relation?fid=375324157
+    这个API返回用户关系
+    fid是目标用户UID
+    关系存放在data/attribute下
+
+    0是未关注
+    2是已关注，未互粉
+    6是互粉
+
+
+大号抓包记录 -- 关注&取关
+    经过测试
+    https://api.bilibili.com/x/relation/modify
+    这个API是用于关注和取关用户的
+
+    需要使用Post方法
+    form data里fid是目标用户，act是行为，act=1为关注act=2为取关

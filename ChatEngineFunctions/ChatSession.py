@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import re
 from bs4 import BeautifulSoup
 
 import ChatEngineFunctions.HeaderTransfer as HeaderTransfer
@@ -72,10 +73,10 @@ class ChatSession:
         # chat history response
         getChatRes = requests.get(url, headers=self.headers)
         getChatRes.encoding = 'utf-8'
+        print("Get chat response:" + getChatRes.text)
 
         # json resolve
         chatHistoryJson = json.loads(getChatRes.text)
-
 
         messages = chatHistoryJson['data']['messages']
 
@@ -99,6 +100,10 @@ class ChatSession:
     def SendMessage(self, message):
         url = 'https://api.vc.bilibili.com/web_im/v1/web_im/send_msg'
 
+        # use regex to extract csrf modification code
+        csrfCode = re.findall(r'bili_jct=(.+);', json.dumps(self.headers))[0]
+        print('csrfCode extracted')
+
         formData = {
             'msg[sender_uid]': self.selfUID,
             'msg[receiver_id]': self.talker_id,
@@ -110,10 +115,11 @@ class ChatSession:
             'msg[dev_id]': '3A978B3B-9F97-4B9A-B35C-F472129BD033',
             'build': '0',
             'mobi_app': 'web',
-            'csrf_token': '50d81a6bc8ad02135bb493e129da9f56',
+            'csrf_token': str(csrfCode),
         }
 
         messageSendResponse = requests.post(url, formData, headers=self.headers)
+        print('Send message response:' + messageSendResponse.text)
 
         return messageSendResponse
     
